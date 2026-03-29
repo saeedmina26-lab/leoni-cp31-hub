@@ -5,17 +5,32 @@ const Anthropic = require('@anthropic-ai/sdk');
 require('dotenv').config();
 
 const app = express();
+
+// Log all environment variables related to port
+console.log('All PORT-related env vars:');
+console.log('PORT:', process.env.PORT);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.options('*', cors()); // Handle preflight requests
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, port: PORT });
+});
 
 app.post('/api/chat', async (req, res) => {
+  console.log('POST /api/chat received:', req.body?.message?.slice(0, 50));
   try {
     const { message, context } = req.body;
     if (!message) return res.status(400).json({ error: 'No message' });
@@ -29,11 +44,13 @@ app.post('/api/chat', async (req, res) => {
     });
     res.json({ response: r.content.find(b => b.type === 'text')?.text || '' });
   } catch (e) {
+    console.error('Chat error:', e.message);
     res.status(500).json({ error: e.message });
   }
 });
 
 app.post('/api/summary', async (req, res) => {
+  console.log('POST /api/summary received');
   try {
     const { document: doc } = req.body;
     if (!doc) return res.status(400).json({ error: 'No document' });
@@ -45,6 +62,7 @@ app.post('/api/summary', async (req, res) => {
     });
     res.json({ response: r.content.find(b => b.type === 'text')?.text || '' });
   } catch (e) {
+    console.error('Summary error:', e.message);
     res.status(500).json({ error: e.message });
   }
 });
