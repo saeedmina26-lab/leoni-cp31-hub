@@ -415,8 +415,7 @@ async function sendAI() {
     const res = await fetch('/api/chat', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,context:ctx})});
     if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||'HTTP '+res.status);}
     const data=await res.json();
-    document.getElementById('lm').outerHTML=`<div class="msg ai"><div class="msg-label">🤖 LEONI AI</div>${(data.response||'No response.').replace(/
-/g,'<br>')}</div>`;
+    document.getElementById('lm').outerHTML=`<div class="msg ai"><div class="msg-label">🤖 LEONI AI</div>${(data.response||'No response.').replace(/\n/g,'<br>')}</div>`;
   } catch(e) {
     document.getElementById('lm').outerHTML=`<div class="msg ai"><div class="msg-label">🤖 LEONI AI</div>⚠️ Error: ${e.message}. Please try again.</div>`;
   }
