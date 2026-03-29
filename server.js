@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-async function askGroq(prompt, maxTokens = 600) {
+async function askGroq(prompt, maxTokens = 400) {
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -45,10 +45,25 @@ app.post('/api/chat', async (req, res) => {
   try {
     const { message, context } = req.body;
     if (!message) return res.status(400).json({ error: 'No message' });
-    const prompt = context
-      ? `You are LEONI AI, the intelligent assistant for LEONI Wiring Systems CP3.1 department. You have access to all 148 documents — 13 Procedural Instructions and 135 Technical Standards. Answer helpfully and concisely based on the document registry below.\n\nDOCUMENT REGISTRY:\n${context}\n\nQuestion: ${message}`
-      : message;
-    const text = await askGroq(prompt, 600);
+
+    // Search context for relevant docs only — keeps tokens low
+    let relevantContext = '';
+    if (context) {
+      const lines = context.split('\n');
+      const q = message.toLowerCase();
+      const relevant = lines.filter(l =>
+        l.toLowerCase().includes(q.split(' ')[0]) ||
+        l.toLowerCase().includes(q.split(' ')[1] || '') ||
+        l.toLowerCase().includes(q.split(' ')[2] || '')
+      ).slice(0, 20);
+      relevantContext = relevant.length > 0 ? relevant.join('\n') : lines.slice(0, 30).join('\n');
+    }
+
+    const prompt = relevantContext
+      ? `You are LEONI AI for LEONI Wiring Systems CP3.1 department. Answer based on these relevant documents:\n\n${relevantContext}\n\nQuestion: ${message}\n\nGive a helpful, concise answer.`
+      : `You are LEONI AI for LEONI Wiring Systems CP3.1 department. Answer this question: ${message}`;
+
+    const text = await askGroq(prompt, 400);
     res.json({ response: text });
   } catch (e) {
     console.error('Chat error:', e.message);
@@ -60,8 +75,8 @@ app.post('/api/summary', async (req, res) => {
   try {
     const { document: doc } = req.body;
     if (!doc) return res.status(400).json({ error: 'No document' });
-    const prompt = `You are an expert in LEONI Wiring Systems (WSD) quality management and manufacturing. Give a concise practical explanation (3-5 sentences) of what this CP3.1 document covers and why it matters:\n\n${doc.type} ${doc.nr} - "${doc.title}"\nProcess: ${doc.process} | v${doc.version} | Released: ${doc.date} | ISO: ${doc.iso}`;
-    const text = await askGroq(prompt, 300);
+    const prompt = `LEONI WSD expert. Explain this CP3.1 document in 3-4 sentences:\n${doc.type} ${doc.nr} - "${doc.title}"\nProcess: ${doc.process} | v${doc.version} | ISO: ${doc.iso}`;
+    const text = await askGroq(prompt, 250);
     res.json({ response: text });
   } catch (e) {
     console.error('Summary error:', e.message);
