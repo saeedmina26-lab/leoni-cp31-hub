@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// ── Serve static files from public folder (absolute path for Railway) ──
+// ── Serve static files from public folder ──
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ── Anthropic client ──
@@ -66,8 +66,8 @@ app.post('/api/summary', async (req, res) => {
   }
 });
 
-// ── Catch-all: serve index.html for any unmatched route ──
-app.get('*', (req, res) => {
+// ── Catch-all: serve index.html (fixed for Express 5 compatibility) ──
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
