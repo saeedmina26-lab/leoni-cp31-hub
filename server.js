@@ -5,73 +5,64 @@ const Anthropic = require('@anthropic-ai/sdk');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// ── Middleware ──
+// Railway injects PORT automatically - never hardcode it
+const PORT = process.env.PORT;
+if (!PORT) {
+  console.error('ERROR: PORT environment variable not set!');
+  process.exit(1);
+}
+
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
-// ── Serve static files from public folder ──
-app.use(express.static(path.join(__dirname, 'public')));
+const publicDir = path.join(__dirname, 'public');
+app.use(express.static(publicDir));
 
-// ── Anthropic client ──
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-// ── Health check ──
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'LEONI AI Server is running' });
+  res.json({ ok: true, port: PORT });
 });
 
-// ── AI Chat endpoint ──
 app.post('/api/chat', async (req, res) => {
-  const { message, context } = req.body;
-  if (!message) return res.status(400).json({ error: 'Message is required' });
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(500).json({ error: 'API key not configured.' });
   try {
+    const { message, context } = req.body;
+    if (!message) return res.status(400).json({ error: 'No message' });
     const prompt = context
-      ? `You are LEONI AI, the intelligent assistant for LEONI Wiring Systems CP3.1 department. Answer helpfully and concisely.\n\nDOCUMENT REGISTRY (148 docs):\n${context}\n\nQuestion: ${message}`
+      ? `You are LEONI AI for CP3.1 department. Answer concisely.\n\nDOCS:\n${context}\n\nQuestion: ${message}`
       : message;
-    const response = await anthropic.messages.create({
+    const r = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 600,
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: 'user', content: prompt }]
     });
-    const text = response.content?.find(b => b.type === 'text')?.text || 'No response.';
-    res.json({ response: text });
-  } catch (error) {
-    console.error('Anthropic API error:', error.message);
-    res.status(500).json({ error: `AI error: ${error.message}` });
+    res.json({ response: r.content.find(b => b.type === 'text')?.text || '' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 });
 
-// ── AI Summary endpoint ──
 app.post('/api/summary', async (req, res) => {
-  const { document } = req.body;
-  if (!document) return res.status(400).json({ error: 'Document info is required' });
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(500).json({ error: 'API key not configured.' });
   try {
-    const prompt = `You are an expert in LEONI Wiring Systems (WSD) quality management and manufacturing. Give a concise practical explanation (3-5 sentences) of what this CP3.1 document covers and why it matters:\n\n${document.type === 'Procedural Instruction' ? 'PI' : 'TS'} ${document.nr} - "${document.title}"\nProcess: ${document.process} | v${document.version} | Released: ${document.date} | ISO: ${document.iso || 'N/A'}`;
-    const response = await anthropic.messages.create({
+    const { document: doc } = req.body;
+    if (!doc) return res.status(400).json({ error: 'No document' });
+    const prompt = `Expert in LEONI WSD manufacturing. Explain this CP3.1 document in 3-5 sentences:\n${doc.type} ${doc.nr} - "${doc.title}"\nProcess: ${doc.process} | v${doc.version} | ${doc.date} | ISO: ${doc.iso}`;
+    const r = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 300,
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: 'user', content: prompt }]
     });
-    const text = response.content?.find(b => b.type === 'text')?.text || 'No response.';
-    res.json({ response: text });
-  } catch (error) {
-    console.error('Anthropic API error:', error.message);
-    res.status(500).json({ error: `AI error: ${error.message}` });
+    res.json({ response: r.content.find(b => b.type === 'text')?.text || '' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 });
 
-// ── Catch-all: serve index.html (fixed for Express 5 compatibility) ──
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(publicDir, 'index.html'));
 });
 
-// ── Start server ──
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ LEONI AI Server running on port ${PORT}`);
+  console.log(`✅ LEONI AI running on port ${PORT}`);
 });
