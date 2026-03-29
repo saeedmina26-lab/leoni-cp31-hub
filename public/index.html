@@ -1,1 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEONI · CP3.1 Department Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0d2240;--navy2:#163459;--navy3:#1e4270;
+    --orange:#e8621a;--white:#ffffff;--offwhite:#f4f6f9;
+    --mid-gray:#c2cdd8;--text-muted:#6b7d8f;--text-dark:#0d2240;
+    --pi-color:#1e6fbf;--green:#1a9e6b;--border:rgba(13,34,64,0.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--offwhite);color:var(--text-dark);font-family:'Source Sans 3',sans-serif;min-height:100vh;}
+  header{background:var(--navy);padding:0 40px;display:flex;align-items:stretch;height:68px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(13,34,64,0.35);}
+  .logo-block{display:flex;align-items:center;gap:14px;border-right:1px solid rgba(255,255,255,0.12);padding-right:28px;margin-right:28px;}
+  .leoni-wordmark{font-family:'Montserrat',sans-serif;font-weight:900;font-size:28px;letter-spacing:-0.5px;color:var(--white);}
+  .dept-tag{background:var(--orange);color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;padding:4px 10px;border-radius:4px;letter-spacing:0.5px;}
+  .header-nav{display:flex;align-items:center;gap:4px;flex:1;}
+  .header-nav a{color:rgba(255,255,255,0.7);font-family:'Montserrat',sans-serif;font-weight:600;font-size:13px;padding:0 14px;height:68px;display:flex;align-items:center;text-decoration:none;border-bottom:3px solid transparent;transition:all 0.2s;}
+  .header-nav a:hover,.header-nav a.active{color:#fff;border-bottom-color:var(--orange);}
+  .header-right{display:flex;align-items:center;margin-left:auto;color:rgba(255,255,255,0.5);font-size:12px;}
+  .hero-strip{background:linear-gradient(105deg,var(--navy) 0%,var(--navy2) 50%,var(--navy3) 100%);padding:36px 40px 32px;position:relative;overflow:hidden;}
+  .hero-strip::before{content:'';position:absolute;right:-60px;top:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(232,98,26,0.15) 0%,transparent 70%);border-radius:50%;}
+  .hero-strip::after{content:'CP3.1';position:absolute;right:40px;top:50%;transform:translateY(-50%);font-family:'Montserrat',sans-serif;font-weight:900;font-size:120px;color:rgba(255,255,255,0.04);letter-spacing:-4px;pointer-events:none;}
+  .hero-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:26px;color:#fff;margin-bottom:6px;}
+  .hero-title span{color:var(--orange);}
+  .hero-sub{color:rgba(255,255,255,0.6);font-size:14px;}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:3px solid var(--orange);box-shadow:0 2px 12px rgba(13,34,64,0.08);}
+  .stat-card{padding:22px 28px;border-right:1px solid var(--border);position:relative;}
+  .stat-card:last-child{border-right:none;}
+  .stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--navy);opacity:0;transition:opacity 0.2s;}
+  .stat-card:hover::before{opacity:1;}
+  .stat-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:36px;color:var(--navy);line-height:1;margin-bottom:4px;}
+  .stat-val.orange{color:var(--orange);}.stat-val.blue{color:var(--pi-color);}.stat-val.green{color:var(--green);}
+  .stat-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);}
+  .main{display:flex;min-height:calc(100vh - 260px);}
+  .sidebar{width:230px;background:var(--white);border-right:1px solid var(--border);flex-shrink:0;padding:20px 0;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto;}
+  .content{flex:1;padding:28px 32px;}
+  .nav-section{padding:0 16px;margin-bottom:20px;}
+  .nav-section-label{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);padding:0 8px;margin-bottom:8px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text-muted);transition:all 0.15s;margin-bottom:2px;}
+  .nav-item:hover{background:var(--offwhite);color:var(--navy);}
+  .nav-item.active{background:var(--navy);color:#fff;}
+  .nav-divider{height:1px;background:var(--border);margin:12px 16px;}
+  .filter-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:4px 8px 2px;margin-bottom:4px;}
+  .chip-group{display:flex;flex-wrap:wrap;gap:4px;}
+  .chip{background:var(--offwhite);border:1px solid var(--border);color:var(--text-muted);padding:4px 9px;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+  .chip:hover{border-color:var(--navy);color:var(--navy);}
+  .chip.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .ai-panel{background:var(--white);border:1px solid var(--border);border-left:4px solid var(--orange);border-radius:8px;margin-bottom:24px;overflow:hidden;box-shadow:0 2px 12px rgba(13,34,64,0.06);}
+  .ai-panel-header{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;background:linear-gradient(90deg,rgba(232,98,26,0.04),transparent);border-bottom:1px solid var(--border);}
+  .ai-panel-header h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:var(--navy);}
+  .ai-badge{background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:0.5px;font-family:'Montserrat',sans-serif;}
+  .ai-chat{padding:16px 20px;}
+  .ai-messages{max-height:260px;overflow-y:auto;margin-bottom:12px;}
+  .msg{padding:10px 14px;border-radius:6px;margin-bottom:10px;font-size:13px;line-height:1.6;}
+  .msg.user{background:var(--offwhite);border-left:3px solid var(--navy);color:var(--navy);font-weight:600;}
+  .msg.ai{background:rgba(232,98,26,0.04);border-left:3px solid var(--orange);}
+  .msg-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px;font-family:'Montserrat',sans-serif;}
+  .msg.user .msg-label{color:var(--navy);}.msg.ai .msg-label{color:var(--orange);}
+  .dots span{animation:blink 1.4s infinite;opacity:0;display:inline-block;margin:0 1px;}
+  .dots span:nth-child(2){animation-delay:0.2s;}.dots span:nth-child(3){animation-delay:0.4s;}
+  @keyframes blink{40%{opacity:1;}}
+  .quick-q{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .quick-q button{background:var(--offwhite);border:1px solid var(--border);color:var(--text-muted);padding:5px 12px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+  .quick-q button:hover{border-color:var(--orange);color:var(--orange);}
+  .ai-input-row{display:flex;gap:10px;}
+  .ai-input{flex:1;background:var(--offwhite);border:1px solid var(--border);color:var(--navy);padding:10px 14px;border-radius:6px;font-size:13px;outline:none;font-family:'Source Sans 3',sans-serif;transition:border-color 0.2s;}
+  .ai-input:focus{border-color:var(--orange);}
+  .ai-btn{background:var(--orange);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+  .ai-btn:hover{background:#c9530f;}.ai-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .search-row{display:flex;gap:12px;margin-bottom:16px;align-items:center;}
+  .search-wrap{flex:1;position:relative;}
+  .search-wrap input{width:100%;background:var(--white);border:1px solid var(--border);color:var(--navy);padding:10px 16px 10px 42px;border-radius:6px;font-size:14px;outline:none;font-family:'Source Sans 3',sans-serif;transition:border-color 0.2s;box-shadow:0 1px 4px rgba(13,34,64,0.06);}
+  .search-wrap input:focus{border-color:var(--orange);}
+  .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:16px;pointer-events:none;}
+  .sort-select{background:var(--white);border:1px solid var(--border);color:var(--navy);padding:10px 14px;border-radius:6px;font-size:13px;cursor:pointer;outline:none;font-family:'Montserrat',sans-serif;font-weight:600;}
+  .table-wrap{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 2px 12px rgba(13,34,64,0.06);}
+  .table-header-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 12px;border-bottom:1px solid var(--border);background:var(--offwhite);}
+  .results-count{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;}
+  table{width:100%;border-collapse:collapse;}
+  th{background:var(--navy);padding:11px 16px;text-align:left;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.8);white-space:nowrap;}
+  td{padding:11px 16px;font-size:13px;border-bottom:1px solid rgba(13,34,64,0.06);vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(13,34,64,0.025);cursor:pointer;}
+  .type-badge{display:inline-block;padding:3px 8px;border-radius:3px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.5px;}
+  .badge-PI{background:rgba(30,111,191,0.1);color:var(--pi-color);border:1px solid rgba(30,111,191,0.2);}
+  .badge-TS{background:rgba(232,98,26,0.1);color:var(--orange);border:1px solid rgba(232,98,26,0.2);}
+  .nr-cell{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--text-muted);}
+  .title-cell{font-weight:600;color:var(--navy);max-width:300px;}
+  .proc-cell{font-size:11px;color:var(--text-muted);}
+  .iso-cell{font-size:11px;color:var(--text-muted);font-family:'Montserrat',sans-serif;}
+  .ver-cell{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;text-align:center;}
+  .date-cell{font-size:12px;white-space:nowrap;font-family:'Montserrat',sans-serif;}
+  .date-new{color:var(--green);font-weight:700;}.date-mid{color:var(--navy);}.date-old{color:var(--text-muted);}
+  .no-results{text-align:center;padding:50px;color:var(--text-muted);}
+  .page-row{display:flex;align-items:center;gap:10px;padding:12px 20px;border-top:1px solid var(--border);background:var(--offwhite);}
+  .page-btn{background:var(--white);border:1px solid var(--border);color:var(--navy);padding:6px 16px;border-radius:5px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+  .page-btn:hover{border-color:var(--orange);color:var(--orange);}.page-btn:disabled{opacity:0.3;cursor:not-allowed;}
+  .page-info{margin:0 auto;font-size:12px;color:var(--text-muted);font-weight:600;}
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,34,64,0.6);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
+  .modal-overlay.open{display:flex;}
+  .modal-box{background:var(--white);border-radius:10px;width:540px;max-width:95vw;overflow:hidden;box-shadow:0 20px 60px rgba(13,34,64,0.3);}
+  .modal-top{background:var(--navy);padding:24px 28px;position:relative;}
+  .modal-nr{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:6px;}
+  .modal-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:18px;color:#fff;line-height:1.3;padding-right:32px;}
+  .modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.8);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
+  .modal-close:hover{background:rgba(255,255,255,0.2);}
+  .modal-body{padding:24px 28px;}
+  .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .modal-field label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:4px;font-family:'Montserrat',sans-serif;}
+  .modal-field .fval{font-size:14px;font-weight:600;color:var(--navy);}
+  .modal-ai-section{border-top:1px solid var(--border);padding-top:20px;margin-top:4px;}
+  .modal-ai-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .modal-ai-header strong{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--navy);}
+  .ai-summary-box{background:var(--offwhite);border:1px solid var(--border);border-left:4px solid var(--orange);border-radius:6px;padding:14px 16px;font-size:13px;line-height:1.7;color:var(--text-muted);min-height:60px;}
+  .ai-summary-box.loaded{color:var(--navy);}
+  ::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:var(--offwhite);}::-webkit-scrollbar-thumb{background:var(--mid-gray);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <span class="leoni-wordmark">LEONI</span>
+    <span class="dept-tag">CP3.1</span>
+  </div>
+  <nav class="header-nav">
+    <a href="#" class="active">IMS Registry</a>
+    <a href="#">Standards</a>
+    <a href="#">Processes</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="header-right">WSD Division · IMS Level 48</div>
+</header>
+
+<div class="hero-strip">
+  <div class="hero-title">CP3.1 <span>Department Intelligence Hub</span></div>
+  <div class="hero-sub">LEONI Wiring Systems Division · Procedural Instructions & Technical Standards Registry</div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-val">148</div><div class="stat-label">Total Documents</div></div>
+  <div class="stat-card"><div class="stat-val blue">13</div><div class="stat-label">Procedural Instructions</div></div>
+  <div class="stat-card"><div class="stat-val orange">135</div><div class="stat-label">Technical Standards</div></div>
+  <div class="stat-card"><div class="stat-val green" id="stat-recent">—</div><div class="stat-label">Updated 2025 / 2026</div></div>
+</div>
+
+<div class="main">
+  <aside class="sidebar">
+    <div class="nav-section">
+      <div class="nav-section-label">Views</div>
+      <div class="nav-item active" onclick="setView('all',event)"><span>📋</span> All Documents</div>
+      <div class="nav-item" onclick="setView('pi',event)"><span>📝</span> Procedural Inst.</div>
+      <div class="nav-item" onclick="setView('ts',event)"><span>⚙️</span> Technical Std.</div>
+      <div class="nav-item" onclick="setView('recent',event)"><span>🕐</span> Recently Updated</div>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+      <div class="filter-label">ISO / IATF</div>
+      <div class="chip-group" id="isoFilters"></div>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+      <div class="filter-label">Process Area</div>
+      <div class="chip-group" id="procFilters"></div>
+    </div>
+  </aside>
+
+  <div class="content">
+    <div class="ai-panel">
+      <div class="ai-panel-header" onclick="toggleAI()">
+        <span style="font-size:18px">🤖</span>
+        <h3>LEONI AI Assistant</h3>
+        <span class="ai-badge">LEONI AI</span>
+        <span style="margin-left:auto;color:var(--text-muted);font-size:12px" id="ai-toggle-hint">▼ Ask anything about CP3.1 documents</span>
+      </div>
+      <div class="ai-chat" id="ai-chat">
+        <div class="ai-messages" id="ai-msgs">
+          <div class="msg ai">
+            <div class="msg-label">🤖 LEONI AI</div>
+            Hello! I am the LEONI AI Assistant with full access to all 148 CP3.1 documents — 13 Procedural Instructions and 135 Technical Standards. Ask me anything!
+          </div>
+        </div>
+        <div class="quick-q">
+          <button onclick="askQ('What are the most recently updated documents?')">🕐 Recently updated</button>
+          <button onclick="askQ('Which documents cover testing and quality?')">🔬 Testing & QC</button>
+          <button onclick="askQ('List all assembly-related Technical Standards')">🔧 Assembly docs</button>
+          <button onclick="askQ('Which PI has the highest version number?')">📈 Highest version PI</button>
+        </div>
+        <div class="ai-input-row">
+          <input class="ai-input" id="ai-input" placeholder="Ask LEONI AI about any document, process, or ISO clause..." onkeydown="if(event.key==='Enter') sendAI()">
+          <button class="ai-btn" id="ai-btn" onclick="sendAI()">Ask LEONI AI →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="Search by title, document number, or ISO clause..." oninput="renderTable()">
+      </div>
+      <select class="sort-select" id="sort" onchange="renderTable()">
+        <option value="nr">Sort: Nr ↑</option>
+        <option value="title">Sort: Title A–Z</option>
+        <option value="date_desc">Sort: Newest First</option>
+        <option value="date_asc">Sort: Oldest First</option>
+        <option value="version">Sort: Version ↓</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-header-row">
+        <span class="results-count" id="res-count">Loading…</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Nr</th><th>Type</th><th>Title</th><th>Process Landscape</th><th>Ver.</th><th>Released</th><th>ISO / IATF</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="page-row">
+        <button class="page-btn" id="prev" onclick="goPage(-1)">← Previous</button>
+        <span class="page-info" id="pg-info"></span>
+        <button class="page-btn" id="next" onclick="goPage(1)">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-top">
+      <div class="modal-nr" id="m-nr"></div>
+      <div class="modal-title" id="m-title"></div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div class="modal-field"><label>Document Type</label><div class="fval" id="m-type"></div></div>
+        <div class="modal-field"><label>Version</label><div class="fval" id="m-ver"></div></div>
+        <div class="modal-field"><label>Release Date</label><div class="fval" id="m-date"></div></div>
+        <div class="modal-field"><label>Classification</label><div class="fval" id="m-class"></div></div>
+      </div>
+      <div class="modal-field" style="margin-bottom:10px"><label>Process Landscape</label><div class="fval" id="m-proc"></div></div>
+      <div class="modal-field"><label>ISO 9001 / IATF 16949 Reference</label><div class="fval" id="m-iso" style="font-family:'Montserrat',sans-serif;font-size:13px;color:var(--orange)"></div></div>
+      <div class="modal-ai-section">
+        <div class="modal-ai-header">
+          <span>🤖</span><strong>LEONI AI Summary</strong>
+          <button class="ai-btn" style="padding:6px 14px;font-size:11px;margin-left:auto" id="m-ai-btn" onclick="genModalAI()">Generate Summary</button>
+        </div>
+        <div class="ai-summary-box" id="m-ai-text">Click "Generate Summary" for a LEONI AI-powered explanation of this document.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = [{"Nr":"3003","Title":"Deviation approval","Type":"Procedural Instruction","Process_Landscape":"CP3.1","Version":"18.0","Release_Date_Str":"2025-12-19","Classification":"Internal","ISO_9001_IATF":"8.7.1"},{"Nr":"3004","Title":"Special processes","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.4.1)","Version":"4.0","Release_Date_Str":"2021-05-26","Classification":"Internal","ISO_9001_IATF":"8.5.1/8.5.2"},{"Nr":"3026","Title":"Statistical analysis of characteristics","Type":"Procedural Instruction","Process_Landscape":"CP3.1","Version":"13.0","Release_Date_Str":"2014-09-08","Classification":"Internal","ISO_9001_IATF":"8.6, 9.1.1, 9.1.3"},{"Nr":"3048","Title":"Operator self-inspection","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"5.0","Release_Date_Str":"2021-06-07","Classification":"Internal","ISO_9001_IATF":"8.5.1"},{"Nr":"3049","Title":"Release of production equipment","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.3.4)","Version":"25.0","Release_Date_Str":"2025-08-27","Classification":"Internal","ISO_9001_IATF":"7.1.3, 8.5.1"},{"Nr":"3062","Title":"In-Process and final testing within cable harness manufacturing","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"7.0","Release_Date_Str":"2021-06-07","Classification":"Internal","ISO_9001_IATF":"8.5.1, 8.6, 9.1"},{"Nr":"3102","Title":"Introducing and Controlling Hazardous Substances and preparations","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"7.0","Release_Date_Str":"2025-02-12","Classification":"Internal","ISO_9001_IATF":"7.1.4"},{"Nr":"3113","Title":"Operation Planning Process (OPP)","Type":"Procedural Instruction","Process_Landscape":"CP3.1","Version":"6.0","Release_Date_Str":"2021-05-26","Classification":"Internal","ISO_9001_IATF":"8.5.1"},{"Nr":"3139","Title":"Machine Safety","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.3)","Version":"3.0","Release_Date_Str":"2025-02-12","Classification":"Internal","ISO_9001_IATF":"7.1.3"},{"Nr":"3153","Title":"Standardization of Production Processes","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.3.1)","Version":"4.0","Release_Date_Str":"2021-06-15","Classification":"Internal","ISO_9001_IATF":"7.1.6"},{"Nr":"3167","Title":"Error proofing","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"2.0","Release_Date_Str":"2021-06-07","Classification":"Internal","ISO_9001_IATF":"10.2.4"},{"Nr":"3193","Title":"Design & Development Process for test technology","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.3.1)","Version":"1.0","Release_Date_Str":"2021-06-07","Classification":"Internal","ISO_9001_IATF":"8.3.1, 8.5.1"},{"Nr":"3206","Title":"Creation and release of WSD standard times","Type":"Procedural Instruction","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"2.0","Release_Date_Str":"2025-04-23","Classification":"Internal","ISO_9001_IATF":"8.5.1"},{"Nr":"3003","Title":"Product type and categorization","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.1.1)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3004","Title":"Standard Production Concept","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.1)","Version":"3.0","Release_Date_Str":"2026-01-22","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3005","Title":"Standard Layout design","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.1)","Version":"1.0","Release_Date_Str":"2025-03-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3006","Title":"Production Ramp-up","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.1)","Version":"1.0","Release_Date_Str":"2024-08-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3007","Title":"Lead length optimisation","Type":"Technical Standard","Process_Landscape":"CP3.1(CP3.1.4)","Version":"1.0","Release_Date_Str":"2023-11-14","Classification":"Internal","ISO_9001_IATF":"8.5.1"},{"Nr":"3008","Title":"Board Design Guide Line Content & Visualisation Standard","Type":"Technical Standard","Process_Landscape":"CP 3.1(CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-03-20","Classification":"Internal","ISO_9001_IATF":"8.5.1"},{"Nr":"3010","Title":"Basic rules for optimal workplace design","Type":"Technical Standard","Process_Landscape":"CP 3.1(CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-03-20","Classification":"Internal","ISO_9001_IATF":"7.1.3"},{"Nr":"3014","Title":"Standard Colours for Production Equipment","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3015","Title":"Material Handling Operational F.","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3016","Title":"Material Handling Concept Cutting LV Main & Minor","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3017","Title":"Material Handling Concept WPA LV Main & Minor","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3018","Title":"Material Handling Concept Assembly LV Main & Minor","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3019","Title":"Material Handling Concept Post-Assembly LV Main & Minor","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3020","Title":"Material Handling Concept Cutting CV Harness","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3021","Title":"Material Handling Concept WPA CV Harness","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3022","Title":"Material Handling Concept Assembly CV Harness","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3023","Title":"Material Handling Concept Post Assembly CV Harness","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3024","Title":"Material Handling Concept Cutting HV and Power cables","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3025","Title":"Material Handling Concept WPA HV and Power cables","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3026","Title":"Material Handling Concept Assembly HV Harness and Power cables","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3027","Title":"Material Handling Concept Post Assy. HV Harness and Power cables","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3028","Title":"Material Handling Concept Data Transmission Cables","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3030","Title":"Material Handling Equipment Modular Pipe System","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3031","Title":"Material Handling Equipment AGV","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3032","Title":"Foaming Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3033","Title":"Foaming High Pressure","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3034","Title":"Hot melt (Low pressure injection molding)","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3035","Title":"Molding Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3036","Title":"Molding (Components) and Overmolding","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2023-11-14","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3037","Title":"Potting","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3038","Title":"Sealing","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3039","Title":"Shrinking","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"2.0","Release_Date_Str":"2025-11-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3040","Title":"Stamping / Bending Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3041","Title":"Stamping / Bending Process","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3042","Title":"Packing Process","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2024-11-01","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3043","Title":"Data Cable Test","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3044","Title":"Electrical Test High Voltage","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3045","Title":"Electrical Test Low Voltage CV","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3046","Title":"Electrical Test Low Voltage","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3047","Title":"Guidance Test","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3048","Title":"Post Assembly / Testing","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2023-11-14","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3049","Title":"Presence Test in Assembly","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3050","Title":"Relay and Fuse Assembly","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2024-02-26","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3051","Title":"Routing test","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3052","Title":"Screwing Process","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"2.0","Release_Date_Str":"2025-03-26","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3053","Title":"Tightness Test High Voltage","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3054","Title":"Tightness Test Low Voltage","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-05-22","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3055","Title":"Vision Test","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2023-12-11","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3057","Title":"Material Handling Concept Wire Conipacks Storage and Cutting","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2024-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3058","Title":"Lead and Covering Harmonisation","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2024-06-17","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3059","Title":"Material Handling Concept for Applicators Delivery","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2024-06-17","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3066","Title":"Crimping Low Voltage and High Voltage","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2026-01-22","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3067","Title":"WBA Cutting","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3068","Title":"WBM Cutting","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3069","Title":"WBM Cutting HV","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-06-20","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3070","Title":"Resistance Welding","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3071","Title":"Semi-Automated Twisting","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3072","Title":"Solder process for crimped terminals","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3073","Title":"US Welding Splices","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3074","Title":"US Welding Terminal","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3075","Title":"Wire Preparation Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2024-06-17","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3076","Title":"Assembly Data Transmission Cable","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3077","Title":"Assembly Line DAL","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2026-01-22","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3078","Title":"Modules Whitebook","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2024-06-17","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3079","Title":"Pre-Assembly HV","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3080","Title":"Pre-Assembly Large Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2024-06-17","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3081","Title":"Pre-Assembly Medium Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2024-06-17","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3082","Title":"Pre-Assembly Minors Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2024-06-17","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3083","Title":"Pre-Blocking","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2026-01-22","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3084","Title":"Static Assembly Boards","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2024-06-17","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3085","Title":"Assembly Line Medium","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3086","Title":"Assembly Line Minors","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3087","Title":"Assembly Line Small Minors","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3088","Title":"Clips","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"2.0","Release_Date_Str":"2026-01-22","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3089","Title":"Taping","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"3.0","Release_Date_Str":"2026-01-22","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3090","Title":"After Assembly Medium Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3091","Title":"Assembly Boards","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3092","Title":"Assembly Line Large Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2025-05-28","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3093","Title":"After Assembly Large Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3094","Title":"Channels High Voltage","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3095","Title":"Channels","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3096","Title":"Final Assembly Charging Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3097","Title":"Routing High Voltage","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3098","Title":"Routing","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"1.0","Release_Date_Str":"2024-11-01","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3099","Title":"Assembly female terminals into contact holder","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3100","Title":"Assembly line EMOCAL","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3101","Title":"Blind Seal Insertion","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-03-25","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3102","Title":"Conductor Housing","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3103","Title":"Conductor Housing Push outer Connector","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3104","Title":"Assembly Conductor Snap","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3105","Title":"Connector Line AUX WB","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3106","Title":"Connector Line Charging","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"1.0","Release_Date_Str":"2026-01-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3107","Title":"Connector Line Others Area","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"1.0","Release_Date_Str":"2026-01-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3108","Title":"Connector Line Traction","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"1.0","Release_Date_Str":"2026-01-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3109","Title":"Connector Punching","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-12-11","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3110","Title":"Female Terminal Assembly WB","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3111","Title":"Female Terminal Lock WB","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3112","Title":"Assembly Insulators on Center Conductor","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3113","Title":"Push Insulator onto outer Conductor","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3114","Title":"Assembly lower and upper Shield","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3115","Title":"Assembly plug Subassembly","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3116","Title":"Positioning Pigtails and secondary Lock","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-31","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3117","Title":"Assembly seal and cover cap in end position of connector","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3118","Title":"Push shielding sleeve onto contact holder","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3119","Title":"Assembly components on a cable","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3120","Title":"Assembly upper and lower insulation","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3121","Title":"Braiding (WBM_LV_040_108_Braiding)","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"1.0","Release_Date_Str":"2026-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3122","Title":"Grommet Assembly","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP3.1.4)","Version":"2.0","Release_Date_Str":"2026-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3123","Title":"Balancing Guideline","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3124","Title":"Ramp-up curve tool","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3125","Title":"REFA time study","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-08-02","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3126","Title":"Pre-Assembly Low Volume CV","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3127","Title":"Assembly Low Volume CV","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3128","Title":"After Assembly Low Volume CV","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3130","Title":"Final Assembly PGTF / Classic Assembly Line / TBL-H Assembly Line","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-11-14","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3131","Title":"Final Assembly PGTF / Portal guided table conveyor","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-11-14","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3132","Title":"Inserting CCS Inlet Back Cover","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-10-09","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3133","Title":"Assembly Seal and Cover on Charging Inlet","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-11-14","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3134","Title":"Electrical Test of Components","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-11-14","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3135","Title":"Wobble Test Components","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-11-14","Classification":"Internal","ISO_9001_IATF":"8.5, 8.6"},{"Nr":"3136","Title":"Final Assembly HV","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3137","Title":"Soldering process for PCB","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2023-12-11","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3138","Title":"PCB Transportation Process","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-01-23","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3139","Title":"PCB Insertion Machine Process","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-01-23","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3140","Title":"Electronics THT Components Placement","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-01-23","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3141","Title":"Depaneling Process for PCB","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3142","Title":"Fuse Box Assembly Process","Type":"Technical Standard","Process_Landscape":"CP3.1 (CP 3.1.4)","Version":"0.1","Release_Date_Str":"2024-02-26","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3144","Title":"Symbol standards & Formboard (WBM_GE_010_104_TNM)","Type":"Technical Standard","Process_Landscape":"CP3.1","Version":"2.0","Release_Date_Str":"2025-05-28","Classification":"Internal","ISO_9001_IATF":"8.5"},{"Nr":"3160","Title":"Battery_Cable_Assembly (WBM_LV_040_212_Battery)","Type":"Technical Standard","Process_Landscape":"CP3.1(CP3.1.4)","Version":"1.0","Release_Date_Str":"2025-08-27","Classification":"Internal","ISO_9001_IATF":"8.3.3, 8.5"},{"Nr":"3161","Title":"MH Equipment Tugger Train: Towing truck battery - exchange and charging","Type":"Technical Standard","Process_Landscape":"CP3.1(CP3.1.4)","Version":"1.0","Release_Date_Str":"2025-08-27","Classification":"Internal","ISO_9001_IATF":"8.3.3, 8.5"},{"Nr":"3162","Title":"Material Handling Equipment & Concept Tugger Train Indoor","Type":"Technical Standard","Process_Landscape":"CP3.1(CP3.1.4)","Version":"1.0","Release_Date_Str":"2025-08-27","Classification":"Internal","ISO_9001_IATF":"8.3.3, 8.5"},{"Nr":"3164","Title":"Material Handling Equipment \u2013 Modular Trolley","Type":"Technical Standard","Process_Landscape":"CP3.1(CP3.1.4)","Version":"1.0","Release_Date_Str":"2026-01-22","Classification":"Internal","ISO_9001_IATF":"8.3.3, 8.5"},{"Nr":"3165","Title":"Laboratory instruction for technical cleanliness testing according VDA 19.1","Type":"Technical Standard","Process_Landscape":"CP3.1(CP3.1.4)","Version":"1.0","Release_Date_Str":"2026-02-26","Classification":"Internal","ISO_9001_IATF":"7.1.5"},{"Nr":"3166","Title":"Material Handling Equipment & Concept Tugger Train Indoor - Trailer concept","Type":"Technical Standard","Process_Landscape":"CP3.1(CP3.1.4)","Version":"1.0","Release_Date_Str":"2026-02-26","Classification":"Internal","ISO_9001_IATF":"8.3.3, 8.5"},{"Nr":"3167","Title":"Data Harness Assembly Handling & Care Guide","Type":"Technical Standard","Process_Landscape":"CP3.1(CP3.1.4)","Version":"1.0","Release_Date_Str":"2026-02-26","Classification":"Internal","ISO_9001_IATF":"8.3.3, 8.5"}];
+
+// ── AI call — works inside Claude.ai artifact environment (API key injected automatically) ──
+// Calls the local LEONI AI backend server (server.js)
+async function callAI(userPrompt, maxTokens = 600) {
+  const response = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: userPrompt, maxTokens })
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || `HTTP ${response.status}`);
+  }
+  const data = await response.json();
+  return data.response || 'No response.';
+}
+
+// Calls /api/summary for document detail view
+async function callAISummary(doc) {
+  const response = await fetch('/api/summary', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ document: doc })
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || `HTTP ${response.status}`);
+  }
+  const data = await response.json();
+  return data.response || 'No response.';
+}
+
+let view='all', page=1, PAGE=20, isoF=null, procF=null, aiOpen=true, curItem=null, lastFiltered=[];
+
+function initStats() {
+  document.getElementById('stat-recent').textContent = DATA.filter(d => new Date(d.Release_Date_Str) >= new Date('2025-01-01')).length;
+}
+function buildFilters() {
+  const isos = new Set();
+  DATA.forEach(d => d.ISO_9001_IATF.split(',').forEach(s => { const c = s.trim().split('.')[0]; if(c) isos.add(c); }));
+  const iw = document.getElementById('isoFilters');
+  [...isos].sort().forEach(iso => {
+    const c = document.createElement('span'); c.className='chip'; c.textContent=iso;
+    c.onclick = () => { isoF=isoF===iso?null:iso; iw.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); if(isoF) c.classList.add('active'); page=1; renderTable(); };
+    iw.appendChild(c);
+  });
+  const pw = document.getElementById('procFilters');
+  ['CP3.1.1','CP3.1.3','CP3.1.4'].forEach(p => {
+    const c = document.createElement('span'); c.className='chip'; c.textContent=p;
+    c.onclick = () => { procF=procF===p?null:p; pw.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); if(procF) c.classList.add('active'); page=1; renderTable(); };
+    pw.appendChild(c);
+  });
+}
+function getFiltered() {
+  const q = document.getElementById('search').value.toLowerCase();
+  return DATA.filter(d => {
+    if(view==='pi' && d.Type!=='Procedural Instruction') return false;
+    if(view==='ts' && d.Type!=='Technical Standard') return false;
+    if(view==='recent' && new Date(d.Release_Date_Str)<new Date('2025-01-01')) return false;
+    if(isoF && !d.ISO_9001_IATF.includes(isoF)) return false;
+    if(procF && !d.Process_Landscape.includes(procF)) return false;
+    if(q && !d.Title.toLowerCase().includes(q) && !d.Nr.includes(q) && !d.ISO_9001_IATF.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+function getSorted(data) {
+  const s = document.getElementById('sort').value;
+  return [...data].sort((a,b) => {
+    if(s==='title') return a.Title.localeCompare(b.Title);
+    if(s==='date_desc') return new Date(b.Release_Date_Str)-new Date(a.Release_Date_Str);
+    if(s==='date_asc') return new Date(a.Release_Date_Str)-new Date(b.Release_Date_Str);
+    if(s==='version') return parseFloat(b.Version)-parseFloat(a.Version);
+    return parseInt(a.Nr)-parseInt(b.Nr);
+  });
+}
+function dateC(ds) {
+  const d=new Date(ds);
+  if(d>=new Date('2025-01-01')) return 'date-new';
+  if(d>=new Date('2022-01-01')) return 'date-mid';
+  return 'date-old';
+}
+function renderTable() {
+  lastFiltered = getSorted(getFiltered());
+  const total=lastFiltered.length, totalPg=Math.max(1,Math.ceil(total/PAGE));
+  if(page>totalPg) page=totalPg;
+  const start=(page-1)*PAGE, rows=lastFiltered.slice(start,start+PAGE);
+  document.getElementById('res-count').textContent=`${total} document${total!==1?'s':''} found`;
+  document.getElementById('pg-info').textContent=`Page ${page} of ${totalPg}`;
+  document.getElementById('prev').disabled=page<=1;
+  document.getElementById('next').disabled=page>=totalPg;
+  const tbody=document.getElementById('tbody');
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="7"><div class="no-results">No documents match your search.</div></td></tr>`;return;}
+  tbody.innerHTML=rows.map((d,i)=>`
+    <tr onclick="openModal(${start+i})">
+      <td class="nr-cell">${d.Nr}</td>
+      <td><span class="type-badge badge-${d.Type==='Procedural Instruction'?'PI':'TS'}">${d.Type==='Procedural Instruction'?'PI':'TS'}</span></td>
+      <td class="title-cell">${d.Title}</td>
+      <td class="proc-cell">${d.Process_Landscape}</td>
+      <td class="ver-cell">${d.Version}</td>
+      <td class="date-cell ${dateC(d.Release_Date_Str)}">${d.Release_Date_Str}</td>
+      <td class="iso-cell">${d.ISO_9001_IATF||'—'}</td>
+    </tr>`).join('');
+}
+function openModal(idx) {
+  const d=lastFiltered[idx]; curItem=d;
+  document.getElementById('m-nr').textContent=`${d.Type} · Nr ${d.Nr}`;
+  document.getElementById('m-title').textContent=d.Title;
+  document.getElementById('m-type').innerHTML=`<span class="type-badge badge-${d.Type==='Procedural Instruction'?'PI':'TS'}">${d.Type}</span>`;
+  document.getElementById('m-ver').textContent=`Version ${d.Version}`;
+  document.getElementById('m-date').textContent=d.Release_Date_Str;
+  document.getElementById('m-class').textContent=d.Classification;
+  document.getElementById('m-proc').textContent=d.Process_Landscape;
+  document.getElementById('m-iso').textContent=d.ISO_9001_IATF||'—';
+  document.getElementById('m-ai-text').textContent='Click "Generate Summary" for a LEONI AI-powered explanation.';
+  document.getElementById('m-ai-text').className='ai-summary-box';
+  const btn=document.getElementById('m-ai-btn'); btn.disabled=false; btn.textContent='Generate Summary';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+async function genModalAI() {
+  if(!curItem) return;
+  const btn=document.getElementById('m-ai-btn'); btn.disabled=true; btn.textContent='⏳ Thinking…';
+  const box=document.getElementById('m-ai-text'); box.textContent='LEONI AI is generating…'; box.className='ai-summary-box';
+  try {
+    const text = await callAISummary({
+      type: curItem.Type,
+      nr: curItem.Nr,
+      title: curItem.Title,
+      process: curItem.Process_Landscape,
+      version: curItem.Version,
+      date: curItem.Release_Date_Str,
+      iso: curItem.ISO_9001_IATF
+    });
+    box.textContent=text; box.className='ai-summary-box loaded';
+  } catch(e) { box.textContent=`⚠️ Error: ${e.message}`; }
+  btn.disabled=false; btn.textContent='Regenerate';
+}
+function toggleAI() {
+  aiOpen=!aiOpen;
+  document.getElementById('ai-chat').style.display=aiOpen?'block':'none';
+  document.getElementById('ai-toggle-hint').textContent=aiOpen?'▼ Ask anything about CP3.1 documents':'▶ Click to expand';
+}
+function askQ(q){document.getElementById('ai-input').value=q; sendAI();}
+async function sendAI() {
+  const inp=document.getElementById('ai-input');
+  const q=inp.value.trim(); if(!q) return;
+  const btn=document.getElementById('ai-btn'); btn.disabled=true; inp.value='';
+  const msgs=document.getElementById('ai-msgs');
+  msgs.innerHTML+=`<div class="msg user"><div class="msg-label">You</div>${q}</div>`;
+  msgs.innerHTML+=`<div class="msg ai" id="lm"><div class="msg-label">🤖 LEONI AI</div><div class="dots"><span>●</span><span>●</span><span>●</span></div></div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+  const ctx=DATA.map(d=>`${d.Type==='Procedural Instruction'?'PI':'TS'} ${d.Nr}: "${d.Title}" | ${d.Process_Landscape} | v${d.Version} | ${d.Release_Date_Str} | ISO:${d.ISO_9001_IATF}`).join('\n');
+  try {
+    const res = await fetch('/api/chat', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,context:ctx})});
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||'HTTP '+res.status);}
+    const data=await res.json();
+    document.getElementById('lm').outerHTML=`<div class="msg ai"><div class="msg-label">🤖 LEONI AI</div>${(data.response||'No response.').replace(/
+/g,'<br>')}</div>`;
+  } catch(e) {
+    document.getElementById('lm').outerHTML=`<div class="msg ai"><div class="msg-label">🤖 LEONI AI</div>⚠️ Error: ${e.message}. Please try again.</div>`;
+  }
+  msgs.scrollTop=msgs.scrollHeight; btn.disabled=false;
+}
+function setView(v,e){
+  view=v; page=1;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  e.currentTarget.classList.add('active'); renderTable();
+}
+function goPage(d){page+=d; renderTable();}
+
+initStats(); buildFilters(); renderTable();
+</script>
+</body>
+</html>
 
